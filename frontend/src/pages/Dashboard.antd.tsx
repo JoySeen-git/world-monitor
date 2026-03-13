@@ -115,7 +115,7 @@ function Dashboard() {
   const { events } = useEvents(7)
   const { news, loading: newsLoading } = useNews(3)
   const { indices, loading: riskLoading } = useRiskIndices()
-  const { data: economicData } = useEconomicData()
+  const { data: economicData, loading: economicLoading } = useEconomicData()
   
   const { data: technologyData } = useTechnologyData()
   const { data: environmentData } = useEnvironmentData()
@@ -125,6 +125,7 @@ function Dashboard() {
   const { data: powerIndex } = useComprehensivePowerIndex()
 
   const [activeTab, setActiveTab] = useState('overview')
+  const [dimensionTab, setDimensionTab] = useState('technology')
 
   const translateCountry = (name: string): string => COUNTRY_NAMES[lang]?.[name] || name
 
@@ -248,7 +249,6 @@ function Dashboard() {
           type={connected ? 'success' : 'warning'}
           showIcon
           style={{ margin: 0, padding: '6px 10px', fontSize: 11 }}
-          iconStyle={{ fontSize: 12 }}
         />
       </Card>
 
@@ -261,7 +261,6 @@ function Dashboard() {
               value={stats?.totalEvents || 0}
               prefix={<GlobalOutlined />}
               valueStyle={{ color: '#1890ff', fontSize: 'clamp(18px, 4vw, 24px)' }}
-              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
             />
           </Card>
         </Col>
@@ -272,7 +271,7 @@ function Dashboard() {
               value={stats?.countriesInvolved || 0}
               prefix={<RiseOutlined />}
               valueStyle={{ color: '#52c41a', fontSize: 'clamp(18px, 4vw, 24px)' }}
-              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
+
             />
           </Card>
         </Col>
@@ -283,7 +282,7 @@ function Dashboard() {
               value={stats?.totalNews || 0}
               prefix={<FileTextOutlined />}
               valueStyle={{ color: '#722ed1', fontSize: 'clamp(18px, 4vw, 24px)' }}
-              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
+
             />
           </Card>
         </Col>
@@ -294,7 +293,7 @@ function Dashboard() {
               value={(stats?.avgSeverity || 0).toFixed(2)}
               prefix={<WarningOutlined />}
               valueStyle={{ color: '#faad14', fontSize: 'clamp(18px, 4vw, 24px)' }}
-              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
+
             />
           </Card>
         </Col>
@@ -387,7 +386,6 @@ function Dashboard() {
                         outerRadius={80}
                         dataKey="count"
                         label={(entry: any) => entry.name}
-                        labelLine={{ length: 10 }}
                       >
                         {eventsByTypeData.map((entry: any, index: number) => (
                           <Cell key={`cell-${index}`} fill={ANT_COLORS[index % ANT_COLORS.length]} />
@@ -462,7 +460,6 @@ function Dashboard() {
                         paddingAngle={2}
                         dataKey="value"
                         label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        labelLine={{ length: 8 }}
                       >
                         {(economicData?.slice(0, 8) || []).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={ANT_COLORS[index % ANT_COLORS.length]} />
