@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const API_BASE = import.meta.env.DEV ? 'http://localhost:3001/api' : 'https://world-monitor-production.up.railway.app/api'
+
 export interface TechnologyData {
   country: string
   innovation_index: number
@@ -65,7 +67,7 @@ export function useTechnologyData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/technology-data')
+        const response = await axios.get(`${API_BASE}/technology-data`)
         setData(response.data)
         setLoading(false)
       } catch (err: any) {
@@ -88,7 +90,7 @@ export function useEnvironmentData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/environment-data')
+        const response = await axios.get(`${API_BASE}/environment-data`)
         setData(response.data)
         setLoading(false)
       } catch (err: any) {
@@ -111,7 +113,7 @@ export function useEnergyData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/energy-data')
+        const response = await axios.get(`${API_BASE}/energy-data`)
         setData(response.data)
         setLoading(false)
       } catch (err: any) {
@@ -134,7 +136,7 @@ export function useFoodData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/food-data')
+        const response = await axios.get(`${API_BASE}/food-data`)
         setData(response.data)
         setLoading(false)
       } catch (err: any) {
@@ -157,7 +159,7 @@ export function usePopulationData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/population-data')
+        const response = await axios.get(`${API_BASE}/population-data`)
         setData(response.data)
         setLoading(false)
       } catch (err: any) {
@@ -180,7 +182,7 @@ export function useComprehensivePowerIndex() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/comprehensive-power-index')
+        const response = await axios.get(`${API_BASE}/comprehensive-power-index`)
         setData(response.data)
         setLoading(false)
       } catch (err: any) {
