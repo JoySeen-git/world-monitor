@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Popup, ZoomControl, AttributionControl } from 'react-leaflet'
+import { MapContainer, TileLayer, CircleMarker, Popup, ZoomControl } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Card, Row, Col, Statistic, Table, Tag, Alert, Tabs, Select, Space, Button, Badge, Typography } from 'antd'
 import {
@@ -49,7 +49,7 @@ import {
   usePopulationData,
   useComprehensivePowerIndex
 } from '../hooks/useMultiDimensionData'
-import { useLanguage, TranslationKey } from '../hooks/useLanguage'
+import { useLanguage } from '../hooks/useLanguage'
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
@@ -69,12 +69,12 @@ const PRO_COLORS = [
 ]
 
 // 柔和渐变色配置
-const GRADIENTS = [
-  { start: '#8FA3C0', end: '#A8B5A0', name: 'blue-green' },
-  { start: '#7B9E89', end: '#9CB4CC', name: 'green-blue' },
-  { start: '#C9A9A6', end: '#D4C4A8', name: 'pink-yellow' },
-  { start: '#B8A9C9', end: '#A5C4D4', name: 'purple-cyan' }
-]
+// const GRADIENTS = [
+//   { start: '#8FA3C0', end: '#A8B5A0', name: 'blue-green' },
+//   { start: '#7B9E89', end: '#9CB4CC', name: 'green-blue' },
+//   { start: '#C9A9A6', end: '#D4C4A8', name: 'pink-yellow' },
+//   { start: '#B8A9C9', end: '#A5C4D4', name: 'purple-cyan' }
+// ]
 
 // 严重程度颜色 - 柔和版
 const SEVERITY_COLORS: Record<number, string> = {
@@ -186,7 +186,7 @@ function Dashboard() {
   const riskData = indices.slice(0, 10).map((item) => ({
     name: translateCountry(item.country),
     value: item.risk_score,
-    events: item.event_count
+    events: item.event_count || 0
   }))
 
   // 事件类型统计
@@ -484,7 +484,7 @@ function Dashboard() {
                   columns={eventColumns}
                   dataSource={events.slice(0, 20)}
                   rowKey="event_id"
-                  pagination={{ pageSize: 20, showSizeChanger: true, showTotal: (total) => `${t('total')}: ${total}` }}
+                  pagination={{ pageSize: 20, showSizeChanger: true, showTotal: (total) => `共 ${total} 条` }}
                   scroll={{ x: 1000 }}
                   size="middle"
                 />
@@ -663,7 +663,7 @@ function Dashboard() {
               columns={newsColumns}
               dataSource={news}
               rowKey="id"
-              pagination={{ pageSize: 50, showSizeChanger: true, showTotal: (total) => `${t('total')}: ${total}` }}
+              pagination={{ pageSize: 50, showSizeChanger: true, showTotal: (total) => `共 ${total} 条` }}
               scroll={{ x: 1200 }}
               size="middle"
             />

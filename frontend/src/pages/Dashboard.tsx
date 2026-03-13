@@ -9,12 +9,6 @@ import {
   RiseOutlined,
   LineChartOutlined,
   BankOutlined,
-  TechnologyOutlined,
-  EnvironmentOutlined,
-  RocketOutlined,
-  ShopOutlined,
-  UserOutlined,
-  DashboardOutlined,
   ReloadOutlined,
   PieChartOutlined,
   BarChartOutlined,
@@ -54,7 +48,6 @@ import {
 import { useLanguage, TranslationKey } from '../hooks/useLanguage'
 
 const { TabPane } = Tabs
-const { Option } = Select
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
 
@@ -76,8 +69,7 @@ function Dashboard() {
     gdpRanking, 
     gdpGrowthRanking, 
     militaryRanking,
-    politicalStabilityRanking,
-    loading: economicLoading 
+    politicalStabilityRanking
   } = useEconomicRankings()
   
   // 多维度数据
@@ -90,8 +82,6 @@ function Dashboard() {
 
   const [mapCenter] = useState<[number, number]>([20, 0])
   const [activeTab, setActiveTab] = useState('overview')
-  const [economicTab, setEconomicTab] = useState('gdp')
-  const [dimensionTab, setDimensionTab] = useState('technology')
 
   const eventsByTypeData = stats?.eventsByType || []
   const riskData = indices.slice(0, 10).map((item) => ({
