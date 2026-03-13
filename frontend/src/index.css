@@ -215,6 +215,14 @@ body {
 
 /* 响应式优化 */
 @media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+  
   .ant-table {
     font-size: 12px;
   }
@@ -224,6 +232,81 @@ body {
   }
   
   .ant-statistic-content {
-    font-size: 20px !important;
+    font-size: 18px !important;
+  }
+  
+  .ant-card-head {
+    font-size: 14px !important;
+    padding: 12px !important;
+  }
+  
+  .ant-card-body {
+    padding: 12px !important;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .ant-tabs-nav-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .ant-tabs-nav-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .ant-tabs-tab {
+    padding: 8px 0 !important;
+    margin-right: 16px !important;
+  }
+
+  /* 禁用移动端卡片悬浮效果以提升性能并避免交互冲突 */
+  .ant-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* 表格优化 */
+  .ant-table-thead > tr > th {
+    padding: 8px 4px !important;
+    white-space: nowrap;
+  }
+  
+  .ant-table-tbody > tr > td {
+    padding: 8px 4px !important;
+    white-space: nowrap;
+  }
+  
+  /* 图表容器优化 */
+  .recharts-wrapper {
+    margin: 0 auto;
+  }
+  
+  /* 地图优化 */
+  .leaflet-container {
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* 平板优化 */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .ant-statistic-content {
+    font-size: 22px !important;
+  }
+}
+
+/* 大屏优化 */
+@media (min-width: 1920px) {
+  body {
+    font-size: 16px;
+  }
+  
+  .ant-statistic-content {
+    font-size: 32px !important;
   }
 }

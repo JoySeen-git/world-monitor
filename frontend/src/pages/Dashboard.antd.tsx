@@ -217,100 +217,107 @@ function Dashboard() {
   ]
 
   return (
-    <div style={{ padding: 24, background: '#f0f2f5', minHeight: '100vh' }}>
+    <div style={{ padding: '8px', background: '#f0f2f5', minHeight: '100vh' }}>
       {/* 顶部栏 */}
-      <Card style={{ marginBottom: 24, borderRadius: 8 }}>
-        <Row justify="space-between" align="middle">
-          <Col>
-            <Title level={3} style={{ margin: 0 }}>{t('app_title')}</Title>
-            <Text type="secondary">{t('app_subtitle')}</Text>
+      <Card style={{ marginBottom: 8, borderRadius: 8 }} bodyStyle={{ padding: '12px' }}>
+        <Row justify="space-between" align="middle" gutter={[8, 8]}>
+          <Col xs={24} sm={16} md={16} lg={16}>
+            <Title level={3} style={{ margin: 0, fontSize: 'clamp(16px, 4vw, 22px)', lineHeight: 1.3 }}>{t('app_title')}</Title>
+            <Text type="secondary" style={{ fontSize: 'clamp(11px, 2.5vw, 13px)', display: 'block', marginTop: 4 }}>{t('app_subtitle')}</Text>
           </Col>
-          <Col>
-            <Space>
+          <Col xs={24} sm={8} md={8} lg={8} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
+            <Space size="small" wrap>
               <Select
                 value={lang}
                 onChange={changeLanguage}
-                style={{ width: 120 }}
+                style={{ width: 90, fontSize: 12 }}
                 options={languages.map(l => ({ value: l.code, label: l.name }))}
+                size="small"
               />
               <Button 
                 icon={<ReloadOutlined />} 
                 onClick={() => window.location.reload()}
-              >
-                {t('refresh')}
-              </Button>
+                size="small"
+              />
             </Space>
           </Col>
         </Row>
-        <Divider style={{ margin: '16px 0' }} />
+        <Divider style={{ margin: '8px 0' }} />
         <Alert
           message={connected ? `${t('last_updated')}: ${dayjs().format('YYYY-MM-DD HH:mm:ss')}` : t('network_error')}
           type={connected ? 'success' : 'warning'}
           showIcon
-          style={{ margin: 0 }}
+          style={{ margin: 0, padding: '6px 10px', fontSize: 11 }}
+          iconStyle={{ fontSize: 12 }}
         />
       </Card>
 
       {/* 统计卡片 */}
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-        <Col xs={24} sm={12} lg={6}>
-          <Card loading={statsLoading}>
+      <Row gutter={[8, 8]} style={{ marginBottom: 16 }}>
+        <Col xs={12} sm={12} md={6} lg={6}>
+          <Card loading={statsLoading} bodyStyle={{ padding: '12px' }}>
             <Statistic
               title={t('total_events')}
               value={stats?.totalEvents || 0}
               prefix={<GlobalOutlined />}
-              valueStyle={{ color: '#1890ff' }}
+              valueStyle={{ color: '#1890ff', fontSize: 'clamp(18px, 4vw, 24px)' }}
+              valueStyle={{ fontSize: 'clamp(18px, 4vw, 24px)' }}
+              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card loading={statsLoading}>
+        <Col xs={12} sm={12} md={6} lg={6}>
+          <Card loading={statsLoading} bodyStyle={{ padding: '12px' }}>
             <Statistic
               title={t('countries_involved')}
               value={stats?.countriesInvolved || 0}
               prefix={<RiseOutlined />}
-              valueStyle={{ color: '#52c41a' }}
+              valueStyle={{ color: '#52c41a', fontSize: 'clamp(18px, 4vw, 24px)' }}
+              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card loading={newsLoading}>
+        <Col xs={12} sm={12} md={6} lg={6}>
+          <Card loading={newsLoading} bodyStyle={{ padding: '12px' }}>
             <Statistic
               title={t('news_items')}
               value={stats?.totalNews || 0}
               prefix={<FileTextOutlined />}
-              valueStyle={{ color: '#722ed1' }}
+              valueStyle={{ color: '#722ed1', fontSize: 'clamp(18px, 4vw, 24px)' }}
+              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card loading={statsLoading}>
+        <Col xs={12} sm={12} md={6} lg={6}>
+          <Card loading={statsLoading} bodyStyle={{ padding: '12px' }}>
             <Statistic
               title={t('avg_severity')}
               value={(stats?.avgSeverity || 0).toFixed(2)}
               prefix={<WarningOutlined />}
-              valueStyle={{ color: '#faad14' }}
+              valueStyle={{ color: '#faad14', fontSize: 'clamp(18px, 4vw, 24px)' }}
+              titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
             />
           </Card>
         </Col>
       </Row>
 
       {/* 主内容区 */}
-      <Card style={{ borderRadius: 8 }}>
-        <Tabs activeKey={activeTab} onChange={setActiveTab} size="large">
+      <Card style={{ borderRadius: 8 }} bodyStyle={{ padding: '16px' }}>
+        <Tabs activeKey={activeTab} onChange={setActiveTab} size="middle" tabBarStyle={{ marginBottom: 16 }}>
           <Tabs.TabPane tab={t('global_situation')} key="overview">
             {/* 单张地图 */}
             <Card 
               title={<Space><GlobalOutlined />{t('map_title')}</Space>}
               loading={statsLoading}
-              style={{ marginBottom: 24 }}
+              style={{ marginBottom: 8 }}
+              bodyStyle={{ padding: '8px' }}
             >
               <MapContainer
                 center={[20, 0]}
-                zoom={3}
+                zoom={2}
                 minZoom={2}
                 maxZoom={8}
-                style={{ height: 500 }}
+                style={{ height: '45vh', minHeight: 280, maxHeight: 450 }}
                 zoomControl={false}
                 maxBounds={[[-70, -180], [80, 180]]}
                 maxBoundsViscosity={1.0}
@@ -340,14 +347,14 @@ function Dashboard() {
                     }}
                   >
                     <Popup>
-                      <div style={{ minWidth: 200 }}>
-                        <strong style={{ color: '#1890ff' }}>{event.event_type}</strong><br />
-                        <span>{translateCountry(event.country)}</span><br />
-                        <span style={{ fontSize: '12px', color: '#666' }}>
+                      <div style={{ minWidth: 180, maxWidth: 250 }}>
+                        <strong style={{ color: '#1890ff', fontSize: 13 }}>{event.event_type}</strong><br />
+                        <span style={{ fontSize: 12 }}>{translateCountry(event.country)}</span><br />
+                        <span style={{ fontSize: '11px', color: '#666' }}>
                           {dayjs(event.date).format('YYYY-MM-DD')}
                         </span>
                         {event.title && (
-                          <div style={{ marginTop: 8, fontSize: '12px' }}>{event.title}</div>
+                          <div style={{ marginTop: 6, fontSize: '11px', lineHeight: 1.3 }}>{event.title}</div>
                         )}
                       </div>
                     </Popup>
@@ -356,38 +363,39 @@ function Dashboard() {
               </MapContainer>
             </Card>
 
-            <Row gutter={[24, 24]}>
-              <Col xs={24} lg={12}>
-                <Card title={<Space><WarningOutlined />{t('risk_index_top10')}</Space>} loading={riskLoading}>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={riskData} layout="vertical" margin={{ left: 20 }}>
+            <Row gutter={[8, 8]} style={{ marginBottom: 8 }}>
+              <Col xs={24} md={12}>
+                <Card title={<Space><WarningOutlined />{t('risk_index_top10')}</Space>} loading={riskLoading} bodyStyle={{ padding: '12px' }}>
+                  <ResponsiveContainer width="100%" height={280}>
+                    <BarChart data={riskData} layout="vertical" margin={{ left: 10, right: 10 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                      <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} />
-                      <YAxis dataKey="name" type="category" width={80} tick={{ fontSize: 12 }} />
+                      <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} />
+                      <YAxis dataKey="name" type="category" width={60} tick={{ fontSize: 10 }} />
                       <RechartsTooltip />
-                      <Bar dataKey="value" fill="#1890ff" radius={[0, 4, 4, 0]} barSize={20} />
+                      <Bar dataKey="value" fill="#1890ff" radius={[0, 4, 4, 0]} barSize={16} />
                     </BarChart>
                   </ResponsiveContainer>
                 </Card>
               </Col>
-              <Col xs={24} lg={12}>
-                <Card title={<Space><PieChartOutlined />{t('event_distribution')}</Space>}>
-                  <ResponsiveContainer width="100%" height={350}>
+              <Col xs={24} md={12}>
+                <Card title={<Space><PieChartOutlined />{t('event_distribution')}</Space>} bodyStyle={{ padding: '12px' }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie
                         data={eventsByTypeData}
                         cx="50%"
                         cy="50%"
-                        outerRadius={100}
+                        outerRadius={80}
                         dataKey="count"
                         label={(entry: any) => entry.name}
+                        labelLine={{ length: 10 }}
                       >
                         {eventsByTypeData.map((entry: any, index: number) => (
                           <Cell key={`cell-${index}`} fill={ANT_COLORS[index % ANT_COLORS.length]} />
                         ))}
                       </Pie>
                       <RechartsTooltip />
-                      <Legend />
+                      <Legend wrapperStyle={{ fontSize: 11 }} />
                     </PieChart>
                   </ResponsiveContainer>
                 </Card>
@@ -397,22 +405,23 @@ function Dashboard() {
             <Card 
               title={<Space><FileTextOutlined />{t('event_list')}</Space>}
               loading={statsLoading}
-              style={{ marginTop: 24 }}
+              style={{ marginTop: 16 }}
+              bodyStyle={{ padding: '16px' }}
             >
               <Table
                 columns={eventColumns}
                 dataSource={events.slice(0, 20)}
                 rowKey="event_id"
-                pagination={{ pageSize: 10, showSizeChanger: true }}
-                scroll={{ x: 1000 }}
-                size="middle"
+                pagination={{ pageSize: 10, showSizeChanger: false, responsive: true }}
+                scroll={{ x: 'max-content' }}
+                size="small"
               />
             </Card>
           </Tabs.TabPane>
 
           <Tabs.TabPane tab={t('multi_dimension')} key="multi_dimension">
-            <Card>
-              <Tabs activeKey={dimensionTab} onChange={setDimensionTab}>
+            <Card bodyStyle={{ padding: '16px' }}>
+              <Tabs activeKey={dimensionTab} onChange={setDimensionTab} size="small" tabPosition="top" style={{ marginBottom: 16 }}>
                 {[
                   { key: 'technology', title: t('dimension_technology'), icon: <AppstoreOutlined />, data: technologyData, metrics: ['innovation_index', 'r_d_spending', 'patents_filed'] },
                   { key: 'environment', title: t('dimension_environment'), icon: <EnvironmentOutlined />, data: environmentData, metrics: ['co2_emissions', 'renewable_energy_ratio', 'forest_coverage'] },
@@ -420,8 +429,8 @@ function Dashboard() {
                   { key: 'food', title: t('dimension_food'), icon: <HomeOutlined />, data: foodData, metrics: ['food_security_index', 'grain_production', 'import_dependency'] },
                   { key: 'population', title: t('dimension_population'), icon: <TeamOutlined />, data: populationData, metrics: ['population', 'life_expectancy', 'education_index'] }
                 ].map((dim) => (
-                  <Tabs.TabPane tab={<Space>{dim.icon}{dim.title}</Space>} key={dim.key}>
-                    <ResponsiveContainer width="100%" height={400}>
+                  <Tabs.TabPane tab={<span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>{dim.icon}<span className="hide-on-mobile">{dim.title}</span></span>} key={dim.key}>
+                    <ResponsiveContainer width="100%" height={350}>
                       <BarChart data={(dim.data || []).slice(0, 15).map((d: any) => ({...d, country: translateCountry(d.country)}))}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                         <XAxis dataKey="country" angle={-45} textAnchor="end" height={80} tick={{ fontSize: 11 }} />
@@ -440,48 +449,51 @@ function Dashboard() {
           </Tabs.TabPane>
 
           <Tabs.TabPane tab={t('economic_analysis')} key="economic">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} lg={12}>
-                <Card title={<Space><PieChartOutlined />{t('gdp_distribution')}</Space>} loading={economicLoading}>
-                  <ResponsiveContainer width="100%" height={350}>
+            <Row gutter={[8, 8]} style={{ marginBottom: 8 }}>
+              <Col xs={24} md={12}>
+                <Card title={<Space><PieChartOutlined />{t('gdp_distribution')}</Space>} loading={economicLoading} bodyStyle={{ padding: '12px' }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie
-                        data={economicData?.slice(0, 10).map(d => ({ name: translateCountry(d.country), value: d.gdp_usd_billions })) || []}
+                        data={economicData?.slice(0, 8).map(d => ({ name: translateCountry(d.country), value: d.gdp_usd_billions })) || []}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
+                        innerRadius={50}
+                        outerRadius={90}
                         paddingAngle={2}
                         dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        labelLine={{ length: 8 }}
                       >
-                        {(economicData?.slice(0, 10) || []).map((entry, index) => (
+                        {(economicData?.slice(0, 8) || []).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={ANT_COLORS[index % ANT_COLORS.length]} />
                         ))}
                       </Pie>
                       <RechartsTooltip formatter={(value: any) => [Number(value).toLocaleString(), t('gdp_total')]} />
+                      <Legend wrapperStyle={{ fontSize: 11 }} />
                     </PieChart>
                   </ResponsiveContainer>
                 </Card>
               </Col>
 
-              <Col xs={24} lg={12}>
-                <Card title={<Space><RiseOutlined />{t('gdp_growth_ranking')}</Space>} loading={economicLoading}>
-                  <ResponsiveContainer width="100%" height={350}>
+              <Col xs={24} md={12}>
+                <Card title={<Space><RiseOutlined />{t('gdp_growth_ranking')}</Space>} loading={economicLoading} bodyStyle={{ padding: '12px' }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <BarChart 
                       data={(economicData || [])
                         .filter(d => d.gdp_growth_percent !== undefined && d.gdp_growth_percent !== 0)
                         .sort((a, b) => b.gdp_growth_percent - a.gdp_growth_percent)
-                        .slice(0, 15)
+                        .slice(0, 12)
                         .map(d => ({ country: translateCountry(d.country), growth: d.gdp_growth_percent }))
                       }
                       layout="vertical"
+                      margin={{ left: 10, right: 10 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} />
-                      <YAxis dataKey="country" type="category" width={80} tick={{ fontSize: 11 }} />
+                      <XAxis type="number" tick={{ fontSize: 10 }} />
+                      <YAxis dataKey="country" type="category" width={60} tick={{ fontSize: 10 }} />
                       <RechartsTooltip formatter={(value: any) => [`${Number(value).toFixed(1)}%`, t('gdp_growth')]} />
-                      <Bar dataKey="growth" name={t('gdp_growth')} radius={[0, 4, 4, 0]}>
+                      <Bar dataKey="growth" name={t('gdp_growth')} radius={[0, 4, 4, 0]} barSize={14}>
                         {(economicData || []).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.gdp_growth_percent > 0 ? '#52c41a' : '#f5222d'} />
                         ))}
@@ -491,45 +503,47 @@ function Dashboard() {
                 </Card>
               </Col>
 
-              <Col xs={24} lg={12}>
-                <Card title={<Space><WarningOutlined />{t('military_spending_ranking')}</Space>} loading={economicLoading}>
-                  <ResponsiveContainer width="100%" height={350}>
+              <Col xs={24} md={12}>
+                <Card title={<Space><WarningOutlined />{t('military_spending_ranking')}</Space>} loading={economicLoading} bodyStyle={{ padding: '12px' }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <BarChart 
                       data={(economicData || [])
                         .filter(d => d.military_spending_usd_billions !== undefined && d.military_spending_usd_billions > 0)
                         .sort((a, b) => b.military_spending_usd_billions - a.military_spending_usd_billions)
-                        .slice(0, 15)
+                        .slice(0, 12)
                         .map(d => ({ country: translateCountry(d.country), military: d.military_spending_usd_billions }))
                       }
                       layout="vertical"
+                      margin={{ left: 10, right: 10 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} />
-                      <YAxis dataKey="country" type="category" width={80} tick={{ fontSize: 11 }} />
+                      <XAxis type="number" tick={{ fontSize: 10 }} />
+                      <YAxis dataKey="country" type="category" width={60} tick={{ fontSize: 10 }} />
                       <RechartsTooltip formatter={(value: any) => [Number(value).toLocaleString(), t('military_spending')]} />
-                      <Bar dataKey="military" name={t('military_spending')} fill="#f5222d" radius={[0, 4, 4, 0]} />
+                      <Bar dataKey="military" name={t('military_spending')} fill="#f5222d" radius={[0, 4, 4, 0]} barSize={14} />
                     </BarChart>
                   </ResponsiveContainer>
                 </Card>
               </Col>
 
-              <Col xs={24} lg={12}>
-                <Card title={<Space><BankOutlined />{t('political_stability_ranking')}</Space>} loading={economicLoading}>
-                  <ResponsiveContainer width="100%" height={350}>
+              <Col xs={24} md={12}>
+                <Card title={<Space><BankOutlined />{t('political_stability_ranking')}</Space>} loading={economicLoading} bodyStyle={{ padding: '12px' }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <BarChart 
                       data={(economicData || [])
                         .filter(d => d.political_stability_percent !== undefined && d.political_stability_percent > 0)
                         .sort((a, b) => b.political_stability_percent - a.political_stability_percent)
-                        .slice(0, 15)
+                        .slice(0, 12)
                         .map(d => ({ country: translateCountry(d.country), stability: d.political_stability_percent }))
                       }
                       layout="vertical"
+                      margin={{ left: 10, right: 10 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} />
-                      <YAxis dataKey="country" type="category" width={80} tick={{ fontSize: 11 }} />
+                      <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} />
+                      <YAxis dataKey="country" type="category" width={60} tick={{ fontSize: 10 }} />
                       <RechartsTooltip formatter={(value: any) => [`${Number(value)}%`, t('political_stability')]} />
-                      <Bar dataKey="stability" name={t('political_stability')} radius={[0, 4, 4, 0]}>
+                      <Bar dataKey="stability" name={t('political_stability')} radius={[0, 4, 4, 0]} barSize={14}>
                         {(economicData || []).map((entry, index) => {
                           let color = '#f5222d'
                           if (entry.political_stability_percent >= 80) color = '#52c41a'
@@ -544,10 +558,10 @@ function Dashboard() {
               </Col>
 
               <Col xs={24}>
-                <Card title={<Space><BarChartOutlined />{t('top20_economic_power')}</Space>} loading={economicLoading}>
+                <Card title={<Space><BarChartOutlined />{t('top20_economic_power')}</Space>} loading={economicLoading} bodyStyle={{ padding: '12px' }}>
                   <Table
                     columns={[
-                      { title: '#', dataIndex: 'rank', key: 'rank', width: 60 },
+                      { title: '#', dataIndex: 'rank', key: 'rank', width: 50 },
                       { title: t('country'), dataIndex: 'country', key: 'country', render: (text: string) => translateCountry(text) },
                       { title: `${t('gdp_total')}`, dataIndex: 'gdp_usd_billions', key: 'gdp', sorter: (a: any, b: any) => a.gdp_usd_billions - b.gdp_usd_billions, render: (v: number) => v?.toLocaleString() },
                       { title: `${t('gdp_growth')} (%)`, dataIndex: 'gdp_growth_percent', key: 'growth', sorter: (a: any, b: any) => a.gdp_growth_percent - b.gdp_growth_percent, render: (v: number) => <span style={{ color: v > 0 ? '#52c41a' : '#f5222d' }}>{v?.toFixed(1)}</span> },
@@ -557,12 +571,14 @@ function Dashboard() {
                         if (v >= 80) color = '#52c41a'
                         else if (v >= 60) color = '#1890ff'
                         else if (v >= 40) color = '#faad14'
-                        return <Tag color={color}>{v || '-'}</Tag>
+                        return <Tag color={color} style={{ fontSize: 10 }}>{v || '-'}</Tag>
                       }}
                     ]}
                     dataSource={(economicData || []).slice(0, 20).map((d, i) => ({ ...d, rank: i + 1, key: i }))}
-                    pagination={false}
+                    pagination={{ pageSize: 10, showSizeChanger: false, responsive: true }}
+                    scroll={{ x: 'max-content' }}
                     size="small"
+                    rowClassName={() => 'hide-on-mobile'}
                   />
                 </Card>
               </Col>
@@ -570,21 +586,21 @@ function Dashboard() {
           </Tabs.TabPane>
 
           <Tabs.TabPane tab={t('global_news')} key="news">
-            <Card loading={newsLoading}>
+            <Card loading={newsLoading} bodyStyle={{ padding: '16px' }}>
               <Table
                 columns={newsColumns}
                 dataSource={news}
                 rowKey="id"
-                pagination={{ pageSize: 20, showSizeChanger: true }}
-                scroll={{ x: 1200 }}
-                size="middle"
+                pagination={{ pageSize: 10, showSizeChanger: false, responsive: true }}
+                scroll={{ x: 'max-content' }}
+                size="small"
               />
             </Card>
           </Tabs.TabPane>
 
           <Tabs.TabPane tab={t('power_index')} key="power">
-            <Card title={t('comprehensive_power')}>
-              <ResponsiveContainer width="100%" height={500}>
+            <Card title={t('comprehensive_power')} bodyStyle={{ padding: '16px' }}>
+              <ResponsiveContainer width="100%" height={400}>
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={(powerIndex || []).slice(0, 10).map((d: any) => ({...d, country: translateCountry(d.country)}))}>
                   <PolarGrid stroke="#f0f0f0" />
                   <PolarAngleAxis dataKey="country" tick={{ fontSize: 12 }} />
