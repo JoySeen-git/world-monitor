@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api'
+const API_BASE = 'https://world-monitor-production.up.railway.app'
 
 export interface Event {
   id: number
