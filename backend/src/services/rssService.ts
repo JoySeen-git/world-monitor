@@ -112,7 +112,7 @@ export async function fetchRSSNews(): Promise<NewsItem[]> {
             const newsItem: NewsItem = {
               id: item.guid || item.link || `RSS_${Date.now()}_${Math.random()}`,
               source: feed.name,
-              author: item.creator || item.author || '',
+              author: (item as any).creator || (item as any).author || '',
               title: item.title || '',
               description: cleanDescription(item.contentSnippet || item.description || ''),
               url: item.link || '',

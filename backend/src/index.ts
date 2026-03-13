@@ -56,7 +56,7 @@ const wss = new WebSocketServer({ server, path: '/ws' })
 
 const clients = new Set()
 
-wss.on('connection', (ws) => {
+wss.on('connection', (ws: any) => {
   clients.add(ws)
   console.log('Client connected. Total clients:', clients.size)
   
@@ -67,7 +67,7 @@ wss.on('connection', (ws) => {
 })
 
 function broadcast(data: any) {
-  clients.forEach(client => {
+  clients.forEach((client: any) => {
     if (client.readyState === 1) {
       client.send(JSON.stringify(data))
     }
@@ -303,6 +303,7 @@ function calculateRiskIndices() {
         country,
         risk_score: Math.min(100, riskScore),
         conflict_score: Math.min(100, conflictScore),
+        military_score: 50,
         economic_score: 50,
         political_score: 50,
         last_updated: Date.now()

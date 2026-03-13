@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-interface CountryData {
+export interface CountryData {
   country: string
   code: string
   population?: number
