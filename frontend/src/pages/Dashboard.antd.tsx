@@ -114,7 +114,7 @@ function Dashboard() {
   const { events } = useEvents(7)
   const { news, loading: newsLoading } = useNews(3)
   const { indices, loading: riskLoading } = useRiskIndices()
-  const { data: economicData } = useEconomicData()
+  const { data: economicData, loading: economicLoading } = useEconomicData()
   
   const { data: technologyData } = useTechnologyData()
   const { data: environmentData } = useEnvironmentData()
