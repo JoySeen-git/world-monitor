@@ -108,13 +108,14 @@ const COUNTRY_NAMES: Record<string, Record<string, string>> = {
 
 function Dashboard() {
   const { lang, t, changeLanguage, languages } = useLanguage()
-  const WS_URL = 'wss://world-monitor-production.up.railway.app/api/ws'
+  const isDev = import.meta.env.DEV
+  const WS_URL = isDev ? 'ws://localhost:3001/api/ws' : 'wss://world-monitor-production.up.railway.app/api/ws'
   const { connected } = useWebSocket(WS_URL)
   const { stats, loading: statsLoading } = useStatistics()
   const { events } = useEvents(7)
   const { news, loading: newsLoading } = useNews(3)
   const { indices, loading: riskLoading } = useRiskIndices()
-  const { data: economicData, loading: economicLoading } = useEconomicData()
+  const { data: economicData } = useEconomicData()
   
   const { data: technologyData } = useTechnologyData()
   const { data: environmentData } = useEnvironmentData()
@@ -124,7 +125,6 @@ function Dashboard() {
   const { data: powerIndex } = useComprehensivePowerIndex()
 
   const [activeTab, setActiveTab] = useState('overview')
-  const [dimensionTab, setDimensionTab] = useState('technology')
 
   const translateCountry = (name: string): string => COUNTRY_NAMES[lang]?.[name] || name
 

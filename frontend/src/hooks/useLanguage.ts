@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { translations, languages, type TranslationKey } from '../locales'
+import { translations, type TranslationKey } from '../locales'
 
 export function useLanguage() {
   const [lang, setLang] = useState<'zh' | 'en'>('zh')
@@ -25,6 +25,6 @@ export function useLanguage() {
     lang,
     t,
     changeLanguage,
-    languages
+    languages: languages
   }
 }

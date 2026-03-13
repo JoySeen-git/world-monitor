@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = 'https://world-monitor-production.up.railway.app/api'
+const API_BASE = import.meta.env.DEV ? 'http://localhost:3001/api' : 'https://world-monitor-production.up.railway.app/api'
 
 export interface Event {
   id: number
