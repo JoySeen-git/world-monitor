@@ -1,319 +1,259 @@
-# 阿里云服务器部署指南
+# World Monitor 阿里云部署指南
 
-## 📋 部署前准备
+## 📋 准备工作
 
-### 1. 阿里云 ECS 配置要求
-- **系统**: Ubuntu 20.04 / 22.04 LTS（推荐）或 CentOS 7+
-- **CPU**: 2 核以上
-- **内存**: 4GB 以上
-- **存储**: 40GB 以上
-- **网络**: 开放端口 80、443、3001
+### 1. 购买阿里云轻量应用服务器
 
-### 2. 安全组配置
+**推荐配置**：
+- **CPU**: 2 核
+- **内存**: 2GB
+- **硬盘**: 40GB SSD
+- **带宽**: 3Mbps
+- **价格**: 约 99 元/年
+
+**操作系统**: Ubuntu 20.04 LTS 或 22.04 LTS
+
+### 2. 配置安全组
+
 在阿里云控制台开放以下端口：
 - **80**: HTTP
-- **443**: HTTPS
-- **3001**: 应用端口
+- **443**: HTTPS（可选，如需 HTTPS）
+- **22**: SSH
 
 ---
 
-## 🚀 方式一：Docker 部署（推荐）
+## 🚀 部署步骤
 
-### 步骤 1：连接服务器
+### 步骤 1: 连接服务器
 
 ```bash
-# SSH 连接到阿里云服务器
+# 使用 SSH 连接
 ssh root@你的服务器 IP
 ```
 
-### 步骤 2：安装 Docker
+### 步骤 2: 安装 Git
 
 ```bash
-# 更新系统
-sudo apt update && sudo apt upgrade -y
-
-# 安装 Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-# 启动 Docker
-sudo systemctl start docker
-sudo systemctl enable docker
-
-# 验证安装
-docker --version
+sudo apt-get update
+sudo apt-get install -y git
 ```
 
-### 步骤 3：上传项目
+### 步骤 3: 克隆项目
 
-**方法 A：使用 Git**
 ```bash
-# 克隆项目
 git clone https://github.com/JoySeen-git/world-monitor.git
 cd world-monitor
 ```
 
-**方法 B：使用 SCP 从本地上传**
+### 步骤 4: 运行部署脚本
+
 ```bash
-# 在本地执行（不是服务器）
-# 在项目根目录执行
-scp -r ./* root@你的服务器 IP:~/world-monitor
+# 给脚本执行权限
+chmod +x deploy.sh
+
+# 运行部署
+bash deploy.sh
 ```
 
-### 步骤 4：构建并运行
+部署过程大约需要 5-10 分钟，请耐心等待。
+
+---
+
+## ✅ 验证部署
+
+### 检查服务状态
 
 ```bash
-# 使用 Docker Compose 构建
-docker-compose up -d --build
-
-# 查看日志
-docker-compose logs -f
-
-# 停止服务
-docker-compose down
-
-# 重启服务
-docker-compose restart
+sudo docker-compose ps
 ```
 
-### 步骤 5：验证部署
+应该看到 3 个服务都在运行：
+- world-monitor-backend
+- world-monitor-frontend
+- world-monitor-nginx
+
+### 访问网站
+
+在浏览器中打开：
+
+```
+http://你的服务器 IP
+```
+
+### 测试 API
 
 ```bash
-# 检查容器状态
-docker ps
-
-# 测试 API
-curl http://localhost:3001/api/statistics
+curl http://localhost/api/statistics
 ```
 
 ---
 
-## 🔧 方式二：直接部署
-
-### 步骤 1：安装 Node.js
-
-```bash
-# 安装 Node.js 20.x
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# 验证安装
-node -v
-npm -v
-```
-
-### 步骤 2：安装 PM2
-
-```bash
-sudo npm install -g pm2
-```
-
-### 步骤 3：上传项目
-
-```bash
-# 方法同上（Git 或 SCP）
-git clone https://github.com/JoySeen-git/world-monitor.git
-cd world-monitor
-```
-
-### 步骤 4：安装依赖并构建
-
-```bash
-# 构建前端
-cd frontend
-npm install
-npm run build
-cd ..
-
-# 构建后端
-cd backend
-npm install
-npm run build
-cd ..
-```
-
-### 步骤 5：启动服务
-
-```bash
-# 使用 PM2 启动
-pm2 start ecosystem.config.cjs
-
-# 设置开机自启
-pm2 startup
-pm2 save
-```
-
-### 步骤 6：管理命令
-
-```bash
-# 查看状态
-pm2 status
-
-# 查看日志
-pm2 logs
-
-# 重启
-pm2 restart world-monitor
-
-# 停止
-pm2 stop world-monitor
-```
-
----
-
-## 🔒 配置 HTTPS（推荐）
-
-### 使用 Nginx 反向代理
-
-### 步骤 1：安装 Nginx
-
-```bash
-sudo apt install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
-```
-
-### 步骤 2：配置 Nginx
-
-```bash
-sudo nano /etc/nginx/sites-available/world-monitor
-```
-
-添加以下配置：
-
-```nginx
-server {
-    listen 80;
-    server_name 你的域名;
-
-    # 前端静态文件
-    location / {
-        root /app/world-monitor/frontend/dist;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # 后端 API 代理
-    location /api {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # WebSocket 代理
-    location /api/ws {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-### 步骤 3：启用配置
-
-```bash
-# 创建软链接
-sudo ln -s /etc/nginx/sites-available/world-monitor /etc/nginx/sites-enabled/
-
-# 测试配置
-sudo nginx -t
-
-# 重启 Nginx
-sudo systemctl restart nginx
-```
-
-### 步骤 4：申请 SSL 证书（免费）
-
-```bash
-# 安装 Certbot
-sudo apt install certbot python3-certbot-nginx -y
-
-# 申请证书
-sudo certbot --nginx -d 你的域名
-
-# 自动续期
-sudo certbot renew --dry-run
-```
-
----
-
-## 📊 监控和维护
+## 🔧 日常运维
 
 ### 查看日志
 
 ```bash
-# Docker 方式
-docker-compose logs -f
+# 查看所有服务日志
+sudo docker-compose logs -f
 
-# PM2 方式
-pm2 logs
+# 查看后端日志
+sudo docker-compose logs -f backend
+
+# 查看前端日志
+sudo docker-compose logs -f frontend
+
+# 查看 Nginx 日志
+sudo docker-compose logs -f nginx
 ```
 
-### 性能监控
+### 重启服务
 
 ```bash
-# 安装 PM2 Plus（可选）
-pm2 plus
+# 重启所有服务
+sudo docker-compose restart
 
-# 系统监控
-htop
+# 重启单个服务
+sudo docker-compose restart backend
 ```
 
-### 备份数据
+### 更新代码
 
 ```bash
-# 备份数据库
-tar -czf backup-$(date +%Y%m%d).tar.gz backend/data/
+# 拉取最新代码
+git pull origin main
 
-# 定期备份（添加到 crontab）
-0 2 * * * tar -czf /backup/world-monitor-$(date +\%Y\%m\%d).tar.gz /app/world-monitor/backend/data
+# 重新构建并部署
+sudo docker-compose down
+sudo docker-compose up -d --build
 ```
+
+### 停止服务
+
+```bash
+sudo docker-compose down
+```
+
+---
+
+## 🔒 HTTPS 配置（可选）
+
+### 方法一：使用 Let's Encrypt 免费证书
+
+1. **安装 Certbot**
+
+```bash
+sudo apt-get install -y certbot
+```
+
+2. **获取证书**
+
+```bash
+sudo certbot certonly --standalone -d your-domain.com
+```
+
+3. **复制证书到项目目录**
+
+```bash
+mkdir -p nginx/ssl
+sudo cp /etc/letsencrypt/live/your-domain.com/fullchain.pem nginx/ssl/
+sudo cp /etc/letsencrypt/live/your-domain.com/privkey.pem nginx/ssl/
+```
+
+4. **修改 nginx/nginx.conf**
+
+取消 HTTPS 部分的注释，并修改域名。
+
+5. **重启服务**
+
+```bash
+sudo docker-compose restart nginx
+```
+
+### 方法二：使用阿里云 SSL 证书
+
+1. 在阿里云申请 SSL 证书
+2. 下载证书文件
+3. 将证书文件放入 `nginx/ssl` 目录
+4. 修改 `nginx/nginx.conf` 启用 HTTPS
+
+---
+
+## 📊 性能优化建议
+
+### 1. 配置域名
+
+- 购买域名并解析到服务器 IP
+- 使用 CDN 加速静态资源
+
+### 2. 优化 Nginx
+
+- 启用 Gzip 压缩（已配置）
+- 配置浏览器缓存（已配置）
+- 调整 worker 进程数
+
+### 3. 数据库优化
+
+- 定期清理旧数据
+- 使用 SSD 硬盘
 
 ---
 
 ## ⚠️ 常见问题
 
 ### 1. 端口被占用
+
 ```bash
 # 查看端口占用
-sudo lsof -i :3001
+sudo netstat -tulpn | grep :80
 
-# 修改端口
-# 编辑 ecosystem.config.cjs 中的 PORT
+# 停止占用端口的服务
+sudo systemctl stop apache2
 ```
 
-### 2. 内存不足
+### 2. Docker 服务未启动
+
 ```bash
-# 增加 swap
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+### 3. 内存不足
+
+```bash
+# 添加 swap
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 ```
 
-### 3. 无法访问
-- 检查阿里云安全组是否开放端口
-- 检查防火墙设置：`sudo ufw status`
-- 检查服务状态：`docker ps` 或 `pm2 status`
+### 4. 访问速度慢
+
+- 检查服务器带宽
+- 使用 CDN 加速
+- 优化图片和静态资源
+
+---
+
+## 💰 成本估算
+
+| 项目 | 费用 | 备注 |
+|------|------|------|
+| 阿里云轻量服务器 | 99 元/年 | 2 核 2G 配置 |
+| 域名（可选） | 60 元/年 | .com 域名 |
+| SSL 证书 | 0 元 | Let's Encrypt 免费 |
+| **总计** | **约 160 元/年** | 首年 |
 
 ---
 
 ## 📞 技术支持
 
-- **Docker 文档**: https://docs.docker.com
-- **PM2 文档**: https://pm2.keymetrics.io
-- **Nginx 文档**: https://nginx.org
+遇到问题？
+
+1. 查看日志：`sudo docker-compose logs -f`
+2. 检查服务状态：`sudo docker-compose ps`
+3. 重启服务：`sudo docker-compose restart`
 
 ---
 
-**部署完成后访问**: `http://你的服务器 IP:3001` 或 `https://你的域名`
+**🎉 部署完成！享受你的 World Monitor 吧！**
