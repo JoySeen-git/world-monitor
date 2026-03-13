@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API_BASE = 'http://localhost:3001/api'
+const API_BASE = 'https://world-monitor-production.up.railway.app'
 
 export interface EconomicData {
   country: string
@@ -16,6 +16,10 @@ export interface EconomicData {
   corruption_index?: number
   human_development?: number
   year: number
+  gdp_usd_billions?: number
+  gdp_growth_percent?: number
+  military_spending_usd_billions?: number
+  political_stability_percent?: number
 }
 
 export function useEconomicData() {

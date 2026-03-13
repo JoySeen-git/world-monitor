@@ -61,7 +61,8 @@ import {
   usePopulationData,
   useComprehensivePowerIndex
 } from '../hooks/useMultiDimensionData'
-import { useLanguage, TranslationKey } from '../hooks/useLanguage'
+import { useLanguage } from '../hooks/useLanguage'
+import type { TranslationKey } from '../hooks/useLanguage'
 
 const { Title, Text } = Typography
 
@@ -107,13 +108,13 @@ const COUNTRY_NAMES: Record<string, Record<string, string>> = {
 
 function Dashboard() {
   const { lang, t, changeLanguage, languages } = useLanguage()
-  const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001/ws'
+  const WS_URL = 'wss://world-monitor-production.up.railway.app/ws'
   const { connected } = useWebSocket(WS_URL)
   const { stats, loading: statsLoading } = useStatistics()
-  const { events, loading: eventsLoading } = useEvents(7)
+  const { events } = useEvents(7)
   const { news, loading: newsLoading } = useNews(3)
   const { indices, loading: riskLoading } = useRiskIndices()
-  const { data: economicData, loading: economicLoading } = useEconomicData()
+  const { data: economicData } = useEconomicData()
   
   const { data: technologyData } = useTechnologyData()
   const { data: environmentData } = useEnvironmentData()
@@ -123,7 +124,6 @@ function Dashboard() {
   const { data: powerIndex } = useComprehensivePowerIndex()
 
   const [activeTab, setActiveTab] = useState('overview')
-  const [economicTab, setEconomicTab] = useState('gdp')
   const [dimensionTab, setDimensionTab] = useState('technology')
 
   const translateCountry = (name: string): string => COUNTRY_NAMES[lang]?.[name] || name
@@ -261,7 +261,6 @@ function Dashboard() {
               value={stats?.totalEvents || 0}
               prefix={<GlobalOutlined />}
               valueStyle={{ color: '#1890ff', fontSize: 'clamp(18px, 4vw, 24px)' }}
-              valueStyle={{ fontSize: 'clamp(18px, 4vw, 24px)' }}
               titleStyle={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
             />
           </Card>

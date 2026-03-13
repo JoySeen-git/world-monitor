@@ -40,6 +40,8 @@ export interface RiskIndex {
   conflict_score: number
   economic_score: number
   political_score: number
+  military_score: number
+  event_count?: number
   last_updated: number
 }
 
