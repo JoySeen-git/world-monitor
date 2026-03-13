@@ -108,7 +108,7 @@ const COUNTRY_NAMES: Record<string, Record<string, string>> = {
 
 function Dashboard() {
   const { lang, t, changeLanguage, languages } = useLanguage()
-  const WS_URL = 'wss://world-monitor-production.up.railway.app/ws'
+  const WS_URL = 'wss://world-monitor-production.up.railway.app/api/ws'
   const { connected } = useWebSocket(WS_URL)
   const { stats, loading: statsLoading } = useStatistics()
   const { events } = useEvents(7)

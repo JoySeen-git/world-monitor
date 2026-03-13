@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API_BASE = 'https://world-monitor-production.up.railway.app'
+const API_BASE = 'https://world-monitor-production.up.railway.app/api'
 
 export interface EconomicData {
   country: string
