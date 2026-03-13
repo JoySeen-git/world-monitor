@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "cd backend && npx tsx dist/index.js",
+    "startCommand": "npx tsx backend/dist/index.js",
     "healthcheckPath": "/api/statistics",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
